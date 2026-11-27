@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>LORD SYRIA | بوت التحليل العالمي</title>
+<style>
+:root{--bg:#050b15;--panel:#091525;--panel2:#0b1a2b;--line:#16465a;--cyan:#31e4dc;--blue:#168de0;--text:#eef7ff;--muted:#91a8bb;--gold:#d9bd6d;--red:#ff7180;--green:#4ce0a3}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#123454 0,#07111f 42%,#040811 100%);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+.wrap{width:min(760px,100%);margin:auto;padding:22px 15px 34px}.brand{text-align:center;margin:2px auto 18px}.crest{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;border:1px solid #48d7dc;box-shadow:0 0 22px #16becb44,inset 0 0 15px #129eaf30;background:linear-gradient(145deg,#102942,#06101d);font-size:25px}.brand h1{font-size:19px;letter-spacing:.5px;margin:0 0 5px;color:#f7f9fc}.brand p{font-size:12px;color:var(--cyan);margin:0}.card{border:1px solid #1a5365;background:linear-gradient(160deg,#0b1b2d,#07111f 70%);border-radius:24px;padding:17px;margin:13px 0;box-shadow:0 14px 34px #0005}.selection{text-align:center;padding:21px 16px}.pair-picker{position:relative;width:100%;max-width:430px;margin:0 auto;z-index:5;text-align:right}.pair-select{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;border:1px solid #28788a;border-radius:18px;background:linear-gradient(145deg,#0c2032,#071321);color:#fff;padding:15px 17px;font-size:16px;outline:none;text-align:right;cursor:pointer;box-shadow:inset 0 0 18px #0d526322}.pair-select strong{font-size:17px}.pair-flags{direction:ltr;font-size:20px;white-space:nowrap}.market-label{font-size:11px;color:#92e6e0;border:1px solid #1d6972;border-radius:20px;padding:4px 8px}.chevron{margin-right:auto;color:#54ddd8;font-size:20px}.pair-menu{display:none;position:absolute;top:calc(100% + 7px);right:0;left:0;z-index:30;padding:6px;border:1px solid #247083;border-radius:17px;background:linear-gradient(160deg,#0c2032,#07111e);box-shadow:0 16px 36px #0009;max-height:290px;overflow-y:auto}.pair-picker.open .pair-menu{display:block}.pair-option{display:flex;align-items:center;gap:10px;width:100%;padding:12px 11px;border:0;border-radius:12px;background:transparent;color:#ecf7ff;text-align:right;font:inherit;cursor:pointer}.pair-option+.pair-option{border-top:1px solid #153248}.pair-option:hover,.pair-option.selected{background:#12324a}.pair-option .pair-flags{font-size:19px}.pair-option strong{font-size:15px}.pair-option small{font-size:10px;color:#8ce7e1;border:1px solid #1a5966;border-radius:15px;padding:3px 7px}.pair-option .check{margin-right:auto;color:#45e0d9;opacity:0}.pair-option.selected .check{opacity:1}.subline{color:#8fe7e3;font-size:14px;margin:15px 0 18px}.tf-title,.caption{font-size:12px;color:#9cb4c7;margin-bottom:9px}.timeframes{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}.tf{min-width:55px;padding:9px 11px;border-radius:99px;border:1px solid #1c394e;background:#101d30;color:#d7e5f1;font-size:12px;cursor:pointer}.tf.active{background:linear-gradient(120deg,#147acb,#20b8c9);border-color:#47dce2;color:white;box-shadow:0 0 14px #20b8c944}.mainbtn{display:block;border:0;color:#fff;background:linear-gradient(115deg,#1169bb,#078fd2 56%,#20c4da);border-radius:18px;width:min(100%,430px);padding:15px 18px;font-size:16px;font-weight:bold;margin:22px auto 0;box-shadow:0 8px 22px #008fd044;cursor:pointer}.mainbtn:disabled{opacity:.65;cursor:default}.section-title{text-align:center;font-size:15px;margin:3px 0 15px;color:#d9f6fa}.pair-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pair{border:1px solid #19394d;border-radius:16px;padding:12px;background:#081423;display:flex;align-items:center;gap:10px;cursor:pointer;min-height:62px}.pair input{accent-color:#39ded6;width:17px;height:17px}.pair strong{font-size:14px}.pair small{display:block;color:#8da8bd;font-size:10px;margin-top:4px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);margin-inline-start:auto;box-shadow:0 0 10px #4ce0a3}.tools-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.tool{display:none;border:1px solid #1b3b50;border-radius:99px;background:#101c2e;color:#cde2f2;padding:10px 14px;font-size:12px}.tool.visible{display:inline-block}.tool:before{content:'◉';color:var(--cyan);margin-left:7px}.tool.active{border-color:#32ded8;color:#fff;box-shadow:0 0 15px #20c4da44}.tool.done{border-color:#245d56;color:#a8f3d2}.process{display:none;margin-top:18px}.bar{height:5px;border-radius:10px;background:#11283a;overflow:hidden}.bar span{display:block;width:0;height:100%;background:linear-gradient(90deg,#2298ea,#43eee0);transition:width .8s}.status{text-align:center;color:#b9d0e2;font-size:13px;margin:13px 0 0}.result{display:none;text-align:center;margin-top:18px;padding:18px;border-radius:19px;border:1px solid #23485c;background:#06101d}.result h2{font-size:19px;margin:0 0 12px}.waiting{color:#b8c9d7;font-size:14px;line-height:1.8}.signal{font-size:24px;font-weight:bold;padding:12px;border:1px solid #ff718055;border-radius:15px;color:var(--red);margin:8px auto;width:min(280px,100%);background:#a51d2b16}.signal.buy{border-color:#4ce0a366;color:var(--green);background:#4ce0a310}.signal.sell{border-color:#ff718066;color:var(--red);background:#a51d2b16}.signal.wait{border-color:#d9bd6d66;color:var(--gold);background:#d9bd6d10}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}.metric{background:#091725;border:1px solid #142f42;border-radius:14px;padding:12px}.metric small{display:block;color:#89a3b8;margin-bottom:7px}.metric b{font-size:15px}.fineprint{text-align:center;color:#8194a8;font-size:11px;line-height:1.8;margin:16px 8px 0}.footer{text-align:center;font-size:10px;color:#587187;margin-top:22px;letter-spacing:.5px}
+@media(max-width:430px){.wrap{padding:16px 11px 26px}.card{padding:14px;border-radius:21px}.pair-select{font-size:16px}.pair-select strong{font-size:15px}.pair-option{padding:13px 10px}.pair{padding:10px 9px}.pair strong{font-size:12px}.tf{min-width:51px;padding:8px 9px}.brand{margin-bottom:13px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="brand"><div class="crest">♛</div><h1>LORD SYRIA</h1><p>أداة التحليل الكمي للسوق العالمي</p></header>
+  <section class="card selection">
+    <div class="caption">اختر زوج الفوركس العالمي</div>
+    <div class="pair-picker" id="pairPicker">
+      <button type="button" id="pairSelect" class="pair-select" aria-haspopup="listbox" aria-expanded="false">
+        <span class="pair-flags" id="selectedFlags">🇪🇺 🇺🇸</span><strong id="selectedPair">EUR/USD</strong><span class="market-label">GLOBAL</span><span class="chevron">⌄</span>
+      </button>
+      <div class="pair-menu" id="pairMenu" role="listbox" aria-label="أزواج الفوركس العالمية">
+        <button type="button" class="pair-option selected" data-value="EUR/USD"><span class="pair-flags">🇪🇺 🇺🇸</span><strong>EUR/USD</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="GBP/USD"><span class="pair-flags">🇬🇧 🇺🇸</span><strong>GBP/USD</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="USD/JPY"><span class="pair-flags">🇺🇸 🇯🇵</span><strong>USD/JPY</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="USD/CHF"><span class="pair-flags">🇺🇸 🇨🇭</span><strong>USD/CHF</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="AUD/USD"><span class="pair-flags">🇦🇺 🇺🇸</span><strong>AUD/USD</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="USD/CAD"><span class="pair-flags">🇺🇸 🇨🇦</span><strong>USD/CAD</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="EUR/JPY"><span class="pair-flags">🇪🇺 🇯🇵</span><strong>EUR/JPY</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="GBP/JPY"><span class="pair-flags">🇬🇧 🇯🇵</span><strong>GBP/JPY</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="AUD/JPY"><span class="pair-flags">🇦🇺 🇯🇵</span><strong>AUD/JPY</strong><small>عالمي</small><span class="check">✓</span></button>
+        <button type="button" class="pair-option" data-value="EUR/GBP"><span class="pair-flags">🇪🇺 🇬🇧</span><strong>EUR/GBP</strong><small>عالمي</small><span class="check">✓</span></button>
+      </div>
+    </div>
+    <div class="tf-title">اختر الفريم</div>
+    <div class="timeframes" id="timeframes">
+      <button class="tf active" data-tf="1">1M</button><button class="tf" data-tf="2">2M</button><button class="tf" data-tf="3">3M</button><button class="tf" data-tf="5">5M</button>
+    </div>
+    <button class="mainbtn" id="analyzeBtn">ابدأ التحليل</button>
+  </section>
+  <section class="card" id="analysisCard" style="display:none">
+    <h2 class="section-title">أدوات التحليل</h2>
+    <div class="tools-grid" id="toolsGrid">
+      <span class="tool">جمع شموع السوق</span><span class="tool">حساب المتوسطات EMA</span><span class="tool">تحليل RSI والزخم</span><span class="tool">قراءة الشموع والدعم والمقاومة</span><span class="tool">توليد الإشارة النهائية</span>
+    </div>
+    <div class="process" id="process"><div class="bar"><span id="progress"></span></div><div class="status" id="status">جاهز للتحليل</div></div>
+    <div class="result" id="result"><h2>نتيجة التحليل</h2><div class="signal wait" id="signalLabel">بانتظار التحليل</div><div class="waiting" id="resultText">اختر الزوج والفريم ثم ابدأ التحليل.</div><div class="metrics"><div class="metric"><small>الزوج</small><b id="metricPair">EUR/USD</b></div><div class="metric"><small>الفريم</small><b id="metricTf">1M</b></div><div class="metric"><small>آخر سعر</small><b id="metricPrice">—</b></div><div class="metric"><small>وقت الدخول المقترح</small><b id="metricEntry">—</b></div></div></div>
+  </section>
+  <p class="fineprint">يعتمد التحليل على أسعار السوق العالمي من خادم LORD SYRIA. الإشارة يدوية ولا تنفذ صفقات، ولا تعرض نسبة نجاح غير محسوبة.</p>
+  <footer class="footer">LORD SYRIA · تحليل يدوي · لا ينفذ الصفقات</footer>
+</main>
+<script>
+const select=document.getElementById('pairSelect'), picker=document.getElementById('pairPicker'), menu=document.getElementById('pairMenu'), selected=document.getElementById('selectedPair'), selectedFlags=document.getElementById('selectedFlags');
+let chosenPair='EUR/USD';
+const pretty={'EUR/USD':'EUR/USD','GBP/USD':'GBP/USD','USD/JPY':'USD/JPY','USD/CHF':'USD/CHF','AUD/USD':'AUD/USD','USD/CAD':'USD/CAD','EUR/JPY':'EUR/JPY','GBP/JPY':'GBP/JPY','AUD/JPY':'AUD/JPY','EUR/GBP':'EUR/GBP'};
+const flags={'EUR/USD':'🇪🇺 🇺🇸','GBP/USD':'🇬🇧 🇺🇸','USD/JPY':'🇺🇸 🇯🇵','USD/CHF':'🇺🇸 🇨🇭','AUD/USD':'🇦🇺 🇺🇸','USD/CAD':'🇺🇸 🇨🇦','EUR/JPY':'🇪🇺 🇯🇵','GBP/JPY':'🇬🇧 🇯🇵','AUD/JPY':'🇦🇺 🇯🇵','EUR/GBP':'🇪🇺 🇬🇧'};
+function setPair(value){chosenPair=value;selected.textContent=pretty[value]||value;selectedFlags.textContent=flags[value]||'';document.getElementById('metricPair').textContent=pretty[value]||value;menu.querySelectorAll('.pair-option').forEach(o=>o.classList.toggle('selected',o.dataset.value===value));}
+select.addEventListener('click',()=>{const open=picker.classList.toggle('open');select.setAttribute('aria-expanded',String(open));});
+menu.querySelectorAll('.pair-option').forEach(option=>option.addEventListener('click',()=>{setPair(option.dataset.value);picker.classList.remove('open');select.setAttribute('aria-expanded','false');}));
+document.addEventListener('click',event=>{if(!picker.contains(event.target)){picker.classList.remove('open');select.setAttribute('aria-expanded','false');}});
+let tf=1;document.querySelectorAll('.tf').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tf').forEach(x=>x.classList.remove('active'));b.classList.add('active');tf=Number(b.dataset.tf);document.getElementById('metricTf').textContent=b.textContent;}));
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+document.getElementById('analyzeBtn').addEventListener('click',async()=>{
+  const card=document.getElementById('analysisCard'),btn=document.getElementById('analyzeBtn'),tools=[...document.querySelectorAll('#toolsGrid .tool')],process=document.getElementById('process'),result=document.getElementById('result'),progress=document.getElementById('progress'),status=document.getElementById('status'),signal=document.getElementById('signalLabel');
+  card.style.display='block';process.style.display='block';result.style.display='none';btn.disabled=true;progress.style.width='0%';tools.forEach(t=>t.className='tool');card.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const analysisRequest=fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pair:chosenPair,minutes:tf})}).then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر تحليل السوق الآن.');return data;});
+  let data=null,error=null;
+  for(let i=0;i<tools.length;i++){tools[i].classList.add('visible','active');status.textContent='جاري: '+tools[i].textContent;progress.style.width=Math.round(((i+1)/tools.length)*100)+'%';await pause(650);tools[i].classList.remove('active');tools[i].classList.add('done');}
+  try{data=await analysisRequest;}catch(e){error=e;}
+  result.style.display='block';document.getElementById('metricPair').textContent=pretty[chosenPair]||chosenPair;document.getElementById('metricTf').textContent=tf+'M';
+  if(error){signal.className='signal wait';signal.textContent='تعذر التحليل';document.getElementById('resultText').textContent=error.message||'تعذر الاتصال بخادم الحاسبة.';document.getElementById('metricPrice').textContent='—';document.getElementById('metricEntry').textContent='—';}
+  else{const direction=data.cls==='buy'?'buy':data.cls==='sell'?'sell':'wait';signal.className='signal '+direction;signal.textContent=data.cls==='buy'?'صعود':data.cls==='sell'?'هبوط':'لا توجد إشارة';document.getElementById('resultText').textContent=data.message+' · '+(data.symbol||'Twelve Data');document.getElementById('metricPrice').textContent=data.price||'—';document.getElementById('metricEntry').textContent=data.entry_time||'—';}
+  status.textContent=error?'تعذر الاتصال بالخادم':'اكتمل التحليل';btn.disabled=false;
+});
+</script>
+</body>
+</html>
