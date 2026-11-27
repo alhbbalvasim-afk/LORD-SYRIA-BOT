@@ -43,12 +43,12 @@
   <section class="card" id="analysisCard" style="display:none">
     <h2 class="section-title">أدوات التحليل</h2>
     <div class="tools-grid" id="toolsGrid">
-      <span class="tool">جمع شموع السوق</span><span class="tool">حساب المتوسطات EMA</span><span class="tool">تحليل RSI والزخم</span><span class="tool">قراءة الشموع والدعم والمقاومة</span><span class="tool">توليد الإشارة النهائية</span>
+      <span class="tool">اتجاه السوق وهيكله</span><span class="tool">كسر هيكل السعر</span><span class="tool">سحب السيولة</span><span class="tool">الدعم والمقاومة</span><span class="tool">نماذج الشموع</span><span class="tool">RSI والزخم</span>
     </div>
     <div class="process" id="process"><div class="bar"><span id="progress"></span></div><div class="status" id="status">جاهز للتحليل</div></div>
-    <div class="result" id="result"><h2>نتيجة التحليل</h2><div class="signal wait" id="signalLabel">بانتظار التحليل</div><div class="waiting" id="resultText">اختر الزوج والفريم ثم ابدأ التحليل.</div><div class="metrics"><div class="metric"><small>الزوج</small><b id="metricPair">EUR/USD</b></div><div class="metric"><small>الفريم</small><b id="metricTf">1M</b></div><div class="metric"><small>آخر سعر</small><b id="metricPrice">—</b></div><div class="metric"><small>وقت الدخول المقترح</small><b id="metricEntry">—</b></div></div></div>
+    <div class="result" id="result"><h2>نتيجة التحليل</h2><div class="signal wait" id="signalLabel">بانتظار التحليل</div><div class="waiting" id="resultText">اختر الزوج والفريم ثم ابدأ التحليل.</div><div class="metrics"><div class="metric"><small>الزوج</small><b id="metricPair">EUR/USD</b></div><div class="metric"><small>الفريم</small><b id="metricTf">1M</b></div><div class="metric"><small>آخر سعر</small><b id="metricPrice">—</b></div><div class="metric"><small>وقت الدخول المقترح</small><b id="metricEntry">—</b></div><div class="metric"><small>توافق الشروط الفنية</small><b id="metricAgreement">—</b></div></div></div>
   </section>
-  <p class="fineprint">يعتمد التحليل على أسعار السوق العالمي من خادم LORD SYRIA. الإشارة يدوية ولا تنفذ صفقات، ولا تعرض نسبة نجاح غير محسوبة.</p>
+  <p class="fineprint">درجة توافق الشروط تعبر عن توافق الفحوص الفنية في هذه اللحظة، وليست نسبة نجاح تاريخية أو ضمانًا للنتيجة. الإشارة يدوية ولا ينفذ البوت الصفقات.</p>
   <footer class="footer">LORD SYRIA · تحليل يدوي · لا ينفذ الصفقات</footer>
 </main>
 <script>
@@ -63,15 +63,17 @@ document.addEventListener('click',event=>{if(!picker.contains(event.target)){pic
 let tf=1;document.querySelectorAll('.tf').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tf').forEach(x=>x.classList.remove('active'));b.classList.add('active');tf=Number(b.dataset.tf);document.getElementById('metricTf').textContent=b.textContent;}));
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 document.getElementById('analyzeBtn').addEventListener('click',async()=>{
-  const card=document.getElementById('analysisCard'),btn=document.getElementById('analyzeBtn'),tools=[...document.querySelectorAll('#toolsGrid .tool')],process=document.getElementById('process'),result=document.getElementById('result'),progress=document.getElementById('progress'),status=document.getElementById('status'),signal=document.getElementById('signalLabel');
-  card.style.display='block';process.style.display='block';result.style.display='none';btn.disabled=true;progress.style.width='0%';tools.forEach(t=>t.className='tool');card.scrollIntoView({behavior:'smooth',block:'nearest'});
-  const analysisRequest=fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pair:chosenPair,minutes:tf})}).then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر تحليل السوق الآن.');return data;});
+  const card=document.getElementById('analysisCard'),btn=document.getElementById('analyzeBtn'),grid=document.getElementById('toolsGrid'),process=document.getElementById('process'),result=document.getElementById('result'),progress=document.getElementById('progress'),status=document.getElementById('status'),signal=document.getElementById('signalLabel');
+  card.style.display='block';process.style.display='block';result.style.display='none';btn.disabled=true;progress.style.width='0%';grid.innerHTML='';card.scrollIntoView({behavior:'smooth',block:'nearest'});
   let data=null,error=null;
-  for(let i=0;i<tools.length;i++){tools[i].classList.add('visible','active');status.textContent='جاري: '+tools[i].textContent;progress.style.width=Math.round(((i+1)/tools.length)*100)+'%';await pause(650);tools[i].classList.remove('active');tools[i].classList.add('done');}
-  try{data=await analysisRequest;}catch(e){error=e;}
+  try{const response=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pair:chosenPair,minutes:tf})});data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر تحليل السوق الآن.');}
+  catch(e){error=e;}
+  const checks=data?.tools||[];
+  if(checks.length){for(let i=0;i<checks.length;i++){const item=document.createElement('span');item.className='tool visible active';item.textContent=checks[i].name+' — '+checks[i].result;grid.appendChild(item);status.textContent='تم الفحص: '+checks[i].name;progress.style.width=Math.round(((i+1)/checks.length)*100)+'%';await pause(450);item.classList.remove('active');item.classList.add('done');}}
+  else{status.textContent=error?'تعذر الاتصال بالخادم':'لا تتوفر فحوص كافية';}
   result.style.display='block';document.getElementById('metricPair').textContent=pretty[chosenPair]||chosenPair;document.getElementById('metricTf').textContent=tf+'M';
   if(error){signal.className='signal wait';signal.textContent='تعذر التحليل';document.getElementById('resultText').textContent=error.message||'تعذر الاتصال بخادم الحاسبة.';document.getElementById('metricPrice').textContent='—';document.getElementById('metricEntry').textContent='—';}
-  else{const direction=data.cls==='buy'?'buy':data.cls==='sell'?'sell':'wait';signal.className='signal '+direction;signal.textContent=data.cls==='buy'?'صعود':data.cls==='sell'?'هبوط':'لا توجد إشارة';document.getElementById('resultText').textContent=data.message+' · '+(data.symbol||'Twelve Data');document.getElementById('metricPrice').textContent=data.price||'—';document.getElementById('metricEntry').textContent=data.entry_time||'—';}
+  else{const direction=data.cls==='buy'?'buy':data.cls==='sell'?'sell':'wait';signal.className='signal '+direction;signal.textContent=data.cls==='buy'?'صعود':data.cls==='sell'?'هبوط':'لا توجد إشارة';document.getElementById('resultText').textContent=data.message+' · '+(data.symbol||'Twelve Data');document.getElementById('metricPrice').textContent=data.price||'—';document.getElementById('metricEntry').textContent=data.entry_time||'—';document.getElementById('metricAgreement').textContent=(data.agreement??'—')+'%';}
   status.textContent=error?'تعذر الاتصال بالخادم':'اكتمل التحليل';btn.disabled=false;
 });
 </script>

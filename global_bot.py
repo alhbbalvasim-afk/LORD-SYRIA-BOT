@@ -130,42 +130,60 @@ def fetch_candles(pair, minutes=1):
     return opens, highs, lows, closes
 
 def analyze(pair, minutes=1):
+    """Rule-based technical confluence; score is not a historical win probability."""
     try:
         data = fetch_candles(pair, minutes)
         if not data:
-            return "wait", "🟡 لا توجد بيانات سوق كافية الآن", "", ""
+            return {"cls":"wait", "message":"لا توجد شموع كافية للتحليل", "symbol":pair,
+                    "price":"—", "agreement":0, "tools":[]}
         opens, highs, lows, closes = data
-        e9 = ema(closes, 9)[-1]
-        e21 = ema(closes, 21)[-1]
-        r = rsi(closes, 14)
         price = closes[-1]
+        e9, e21 = ema(closes, 9)[-1], ema(closes, 21)[-1]
+        r = rsi(closes, 14)
         momentum = closes[-1] - closes[-6]
-        support = min(lows[-20:])
-        resistance = max(highs[-20:])
-        bullish = sum(1 for o, c in zip(opens[-3:], closes[-3:]) if c > o)
-        bearish = sum(1 for o, c in zip(opens[-3:], closes[-3:]) if c < o)
+        # ATR-based distance gives support/resistance checks a volatility-aware scale.
+        true_ranges = [max(highs[i]-lows[i], abs(highs[i]-closes[i-1]), abs(lows[i]-closes[i-1])) for i in range(1,len(closes))]
+        atr = sum(true_ranges[-14:]) / max(1, len(true_ranges[-14:]))
+        prior_high, prior_low = max(highs[-15:-2]), min(lows[-15:-2])
+        support, resistance = min(lows[-20:-1]), max(highs[-20:-1])
+        last_o,last_c,last_h,last_l=opens[-1],closes[-1],highs[-1],lows[-1]
+        prev_o,prev_c=opens[-2],closes[-2]
 
-        buy = sell = 0
-        if e9 > e21: buy += 1
-        elif e9 < e21: sell += 1
-        if r is not None:
-            if 52 <= r < 70: buy += 1
-            elif 30 < r <= 48: sell += 1
-        if momentum > 0: buy += 1
-        elif momentum < 0: sell += 1
-        if bullish >= 2: buy += 1
-        elif bearish >= 2: sell += 1
-        middle = (support + resistance) / 2
-        if price > middle: buy += 1
-        elif price < middle: sell += 1
+        checks=[]; buy=sell=0
+        def add(name, direction, detail, weight=1):
+            nonlocal buy,sell
+            checks.append({"name":name,"result":detail,"direction":direction})
+            if direction=="buy": buy+=weight
+            elif direction=="sell": sell+=weight
 
-        if buy >= 4 and buy > sell:
-            return "buy", "🟢 CALL — صعود", f"Twelve Data — {pair} — {minutes}m", f"{price:.5f}"
-        if sell >= 4 and sell > buy:
-            return "sell", "🔴 PUT — هبوط", f"Twelve Data — {pair} — {minutes}m", f"{price:.5f}"
-        return "wait", "🟡 لا توجد إشارة مناسبة الآن", f"Twelve Data — {pair} — {minutes}m", f"{price:.5f}"
+        add("اتجاه السوق وهيكله", "buy" if e9>e21 else "sell" if e9<e21 else "neutral",
+            "EMA 9 أعلى من EMA 21" if e9>e21 else "EMA 9 أدنى من EMA 21" if e9<e21 else "المتوسطان متقاربان")
+        add("كسر هيكل السعر", "buy" if last_c>prior_high else "sell" if last_c<prior_low else "neutral",
+            "إغلاق فوق القمة القريبة" if last_c>prior_high else "إغلاق تحت القاع القريب" if last_c<prior_low else "لا يوجد كسر واضح", 2)
+        add("سحب السيولة", "buy" if last_l<prior_low and last_c>prior_low else "sell" if last_h>prior_high and last_c<prior_high else "neutral",
+            "سحب أسفل قاع ثم إغلاق فوقه" if last_l<prior_low and last_c>prior_low else "سحب أعلى قمة ثم إغلاق تحتها" if last_h>prior_high and last_c<prior_high else "لا يوجد سحب مؤكد", 2)
+        near_support=abs(price-support)<=max(atr*.35, price*.00015)
+        near_resistance=abs(price-resistance)<=max(atr*.35, price*.00015)
+        add("الدعم والمقاومة", "buy" if near_support and last_c>last_o else "sell" if near_resistance and last_c<last_o else "neutral",
+            "ارتداد قرب الدعم" if near_support and last_c>last_o else "رفض قرب المقاومة" if near_resistance and last_c<last_o else "لا يوجد ارتداد مؤكد")
+        bull_engulf=last_c>last_o and prev_c<prev_o and last_c>=prev_o and last_o<=prev_c
+        bear_engulf=last_c<last_o and prev_c>prev_o and last_o>=prev_c and last_c<=prev_o
+        add("نموذج الشموع", "buy" if bull_engulf else "sell" if bear_engulf else "buy" if last_c>last_o and last_c-last_o>atr*.55 else "sell" if last_c<last_o and last_o-last_c>atr*.55 else "neutral",
+            "ابتلاع شرائي" if bull_engulf else "ابتلاع بيعي" if bear_engulf else "شمعة صاعدة قوية" if last_c>last_o and last_c-last_o>atr*.55 else "شمعة هابطة قوية" if last_c<last_o and last_o-last_c>atr*.55 else "لا يوجد نموذج قوي")
+        add("RSI والزخم", "buy" if r is not None and 52<=r<68 and momentum>0 else "sell" if r is not None and 32<r<=48 and momentum<0 else "neutral",
+            f"RSI {r:.1f} والزخم صاعد" if r is not None and 52<=r<68 and momentum>0 else f"RSI {r:.1f} والزخم هابط" if r is not None and 32<r<=48 and momentum<0 else f"RSI {r:.1f} أو الزخم غير متوافق" if r is not None else "RSI غير متاح")
+
+        total=sum(2 if x["name"] in ("كسر هيكل السعر","سحب السيولة") else 1 for x in checks)
+        agreement=round(100*max(buy,sell)/total)
+        # Require multiple independent confirmations and reject opposing structure.
+        cls="buy" if buy>=5 and buy>sell and sell<=1 else "sell" if sell>=5 and sell>buy and buy<=1 else "wait"
+        reasons=[x["name"]+": "+x["result"] for x in checks if x["direction"]==cls]
+        message=("إشارة صعود؛ "+"، ".join(reasons[:3])) if cls=="buy" else ("إشارة هبوط؛ "+"، ".join(reasons[:3])) if cls=="sell" else "لا توجد إشارة: التأكيدات غير كافية أو متعارضة"
+        return {"cls":cls,"message":message,"symbol":pair,"price":f"{price:.5f}",
+                "agreement":agreement,"tools":checks,"buy_score":buy,"sell_score":sell}
     except Exception as e:
-        return "wait", f"🟡 تعذر جلب بيانات السوق: {str(e)}", "", ""
+        return {"cls":"wait","message":f"تعذر جلب بيانات السوق: {str(e)}","symbol":pair,
+                "price":"—","agreement":0,"tools":[]}
 
 def ticker_name(pair):
     return PAIRS.get(pair, "")
@@ -521,7 +539,7 @@ def api_analyze():
     if type(minutes) is not int or minutes not in TIMEFRAMES:
         return jsonify(error="مدة الإشارة يجب أن تكون 1 أو 2 أو 3 أو 5 دقائق."), 400
 
-    cls, message, symbol, price = analyze(pair, minutes)
+    result = analyze(pair, minutes)
     local_now = datetime.now(ZoneInfo("Europe/Istanbul"))
     entry = local_now.replace(second=0, microsecond=0) + timedelta(minutes=minutes)
     duration_label = {1: "دقيقة واحدة", 2: "دقيقتين", 3: "3 دقائق", 5: "5 دقائق"}[minutes]
@@ -529,10 +547,7 @@ def api_analyze():
         pair=pair,
         minutes=minutes,
         duration_label=duration_label,
-        cls=cls,
-        message=message,
-        symbol=symbol,
-        price=price,
+        **result,
         entry_time=entry.strftime("%H:%M"),
     )
 
